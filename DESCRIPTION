@@ -1,0 +1,16 @@
+Package: zhangneurons
+Type: Package
+Title: Example ExploratorySummarizedExperimentList for Shinyngs
+Version: 0.0.1
+Author: Jonathan Manning
+Description: Example ExploratorySummarizedExperimentList for Shinyngs, derived from the 
+    Zhang et al study of neurons and glia (http://www.jneurosci.org/content/34/36/11929.long) 
+License: AGPL-3.0
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
+Imports:
+    shinyngs
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr

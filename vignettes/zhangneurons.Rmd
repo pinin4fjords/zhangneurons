@@ -1,0 +1,45 @@
+---
+title: "Expression data from the Zhang et al study of neurons and glia"
+author: "Jonathan Manning"
+date: "`r Sys.Date()`"
+output: 
+  BiocStyle::html_document
+vignette: >
+  %\VignetteIndexEntry{Expression data from the Zhang et al study of neurons and glia}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Introduction
+
+`ExploratorySummarizedExperimentList` and `ExploratorySummarizedExperiment` are classes defined in the `shinyngs` package. `ExploratorySummarizedExperiment` is an extension of the commonly used `SummarizedExperiment`, while `ExploratorySummarizedExperimentList` serves to collect instances of different feature sets (e.g. genes, transcripts) applied to the same group of samples. 
+
+This package serves to illustrate the use of `ExploratorySummarizedExperimentList` for expression data from the Zhang et al study of neurons and glia (\url{http://www.jneurosci.org/content/34/36/11929.long}). Data were obtained via GEO (\url{https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE52564}) and analysed as described below.
+
+# Analysis 
+
+# Making the `ExploratorySummarizedExperimentList`
+
+`ExploratorySummarizedExperimentList` is described as part of the Shinyngs documentation (see `vignette('shinyngs')`), refer to that documentation for details on building `ExploratorySummarizedExperimentList` objects from R objects. `zhangneurons` was produced by outputting the above results to files and describing them for Shinyngs in the form of a YAML file which was then passed to `shinyngs::eselistFromYAML()` to create the `ExploratorySummarizedExperimentList`.
+
+The YAML file and associated data used to generate the example `zhangneurons` dataset is bundled with this package. Load it and have a look:
+
+```{r eval = TRUE}
+ymlfile <- system.file('extdata', 'shinyngs+salmon.yml', package = 'zhangneurons')
+config <- yaml::yaml.load_file(ymlfile)
+print(config)
+```
+
+The files described there serve as examples of the format expected. You can use this file to run the object creation process:
+
+```{r eval = FALSE}
+setwd(dirname(ymlfile))
+eselist <- eselistFromYAML("shinyngs+salmon.yml")
+```
+
+Then the application can be built and run:
+
+```{r eval = FALSE}
+app <- prepareApp('rnaseq', eselist)
+shiny::shinyApp(ui = app$ui, server = app$server)
+```
