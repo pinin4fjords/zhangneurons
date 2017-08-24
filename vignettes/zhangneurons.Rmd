@@ -18,6 +18,49 @@ This package serves to illustrate the use of `ExploratorySummarizedExperimentLis
 
 # Analysis 
 
+The following detail how the example data were generated. Note: this data was generated using considerably different methods to the study authors, so the results may differ.
+
+## Trimming
+
+Reads were trimmed using Cutadapt version cutadapt-1.9.dev2  (Martin 2011). Reads were trimmed for quality at the 3' end using a quality threshold of 30 and for adapter sequences of the TruSeq RNA Sample Prep Kit kit (AGATCGGAAGAGC). Reads after trimming were required to have a minimum length of 50.  
+
+## Reference 
+
+Genomic and transcriptomic sequences were taken from the _Mus musculus_ genome from Ensembl, assembly GRCm38, annotation version 84.
+
+## Genome alignment
+
+For quality control purposes, reads were aligned to the reference genome using STAR (Dobin 2013) version 2.5.2b specifying paired-end reads and the option `--outSAMtype BAM Unsorted`. All other parameters were left at default.
+
+## Alignment-free quantification}
+
+The quasi-alignment-based tool [Salmon](https://combine-lab.github.io/salmon/) (Patro 2017) (version 0.8.2) was used for transcriptome quantification. cDNA and non-coding transcripts for the reference genome cited above were downloaded, concatenated, and used to produce a quasi-mapping index.
+
+The quantification step was carried out specifying a library type of `ISR` (see http://salmon.readthedocs.io/en/latest/library_type.html) appropriate to the strandedness of the library and bias correction parameters `--seqBias`, `--gcBias` and `--posBias`.
+
+Salmon produces abundance estimates in the form of transcripts per million (TPM) at the transcript level. For downstream analysis estimated counts were derived using the tximport (Soneson 2015) package (version 1.2.0) of Bioconductor and the `countsFromAbundance` setting `lengthScaledTPM` to first multiply TPM by feature length and then scale up to library size. Gene-level estimates were generated using tximport in the same manner, supplying gene identifiers for each transcript derived from Ensembl annotation via the `tx2gene` parameter. Gene names and other fields were also derived from input annotation and added to the estimated counts matrices.
+
+## Count preprocessing
+
+The raw counts table was filtered to remove rows consisting predominantly of near-zero counts, filtering on counts per million (CPM) to avoid artefacts due to library depth. Specificially, a row of the expression matrix was required to have values greater than 0.1 in at least 2 samples, corresponding to the smallest sample group as defined by Group, once any samples were removed (where applicable).  
+
+## Diifferential analysis
+
+Differential analysis was carried out with EdgeR (Robinson 2010) (version 3.16.5), comparing samples of each cell type to all samples not of that type. Fold changes were estimated as per the default behaviour of edgeR, to avoid artefacts which occur with empirical calculation. Specifically, a small prior count is added to each observation before fitting a model, in proportion to the library size. Log fold-changes are shrunk towards 0, to a greater degree with genes of low count, and infinite fold changes are avoided. Statistical assessment of differential expression was carried out with the quasi-likelihood (QL) F-test using the contrasts shown in Table~\ref{table:contrasts}. 
+
+## Differential gene set analysis
+
+Differential gene set analysis was carried out with the ROAST method (Wu 2010) from the Limma package (Ritchie 2015) (version 3.30.13) of Bioconductor, using the same models and contrasts as used in differential expression. The following gene sets were used:
+
+* Gene Ontology Biological Process, downloaded from Molecular Signatures Database version 5.2 (Ashburner2000, Subramanian2005)
+* Gene Ontology Molecular function, downloaded from Molecular Signatures Database version 5.2 (Ashburner2000, Subramanian2005)
+* MSigDB Canonical pathways, downloaded from Molecular Signatures Database version 5.2 (Ashburner2000, Subramanian2005)
+* Gene Ontology Cellular Component, downloaded from Molecular Signatures Database version 5.2 (Ashburner2000, Subramanian2005)
+
+ROAST was executed using 9,999 rotations (randomisations). Each gene set was annotated with those genes individually differential (in the same direction as indicated for the gene set) to an unadjusted p value of 0.05.  
+
+See the [Limma documentation](http://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf) for more information on ROAST.
+
 # Making the `ExploratorySummarizedExperimentList`
 
 `ExploratorySummarizedExperimentList` is described as part of the Shinyngs documentation (see `vignette('shinyngs')`), refer to that documentation for details on building `ExploratorySummarizedExperimentList` objects from R objects. `zhangneurons` was produced by outputting the above results to files and describing them for Shinyngs in the form of a YAML file which was then passed to `shinyngs::eselistFromYAML()` to create the `ExploratorySummarizedExperimentList`.

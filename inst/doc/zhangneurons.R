@@ -1,7 +1,13 @@
-## ---- fig.show='hold'----------------------------------------------------
-plot(1:10)
-plot(10:1)
+## ----eval = TRUE---------------------------------------------------------
+ymlfile <- system.file('extdata', 'shinyngs+salmon.yml', package = 'zhangneurons')
+config <- yaml::yaml.load_file(ymlfile)
+print(config)
 
-## ---- echo=FALSE, results='asis'-----------------------------------------
-knitr::kable(head(mtcars, 10))
+## ----eval = FALSE--------------------------------------------------------
+#  setwd(dirname(ymlfile))
+#  eselist <- eselistFromYAML("shinyngs+salmon.yml")
+
+## ----eval = FALSE--------------------------------------------------------
+#  app <- prepareApp('rnaseq', eselist)
+#  shiny::shinyApp(ui = app$ui, server = app$server)
 
