@@ -14,6 +14,6 @@ knitr::opts_chunk$set(
 
 # Example ExploratorySummarizedExperimentList for Shinyngs
 
-This package provides an `ExploratorySummarizedExperiment` object and the component inputs, for use with [Shinyngs](https://github.com/pinin4fjords/shinyngs). See the [vignette](http://htmlpreview.github.io/?https://github.com/pinin4fjords/zhangneurons/blob/master/inst/doc/zhangneurons.html) for more info. 
+This package provides an `ExploratorySummarizedExperimentList` object and the component inputs, for use with [Shinyngs](https://github.com/pinin4fjords/shinyngs). See the [vignette]https://rawgit.com/pinin4fjords/zhangneurons/master/inst/doc/zhangneurons.html) for more info and a example of building an `ExploratorySummarizedExperimentList` object from scratch using a YAML-format description. 
 
-More examples of how to build your own objects and apps are in the [Shinyngs vignette](http://htmlpreview.github.io/?https://github.com/pinin4fjords/shinyngs/blob/master/inst/doc/shinyngs.html). 
+More examples of how to build your own objects and apps are in the [Shinyngs vignette](https://rawgit.com/pinin4fjords/shinyngs/master/inst/doc/shinyngs.html). 
